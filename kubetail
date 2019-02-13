@@ -58,6 +58,7 @@ Options:
   -v, --verbose             show the commands
   -N, --norun               don't execute the commands, but show them
   -T, --not-multitail       do not use 'multitail'
+  -O, --multitail-options   use additional 'multitail' options from command line (eg. -O "-E {regex}")
 
 Examples:
   ${PROGNAME} my-pod-v1
@@ -262,6 +263,7 @@ while (( $# > 0 )) ; do
   -N|--norun)          norun=1 ;;
   -G|--no-config)      no_multitail_config=1 ;;
   -T|--not-multitail)  not_multitail=1 ;;
+  -O|--multitail-options)  multitail_options="$2" ; shift ;;
   -v|--verbose)        verbose=1 ;;
   --) break ;;
   -*) error "Invalid option '$1'. Use --help to see the valid options" ;;
@@ -323,7 +325,7 @@ if (( not_multitail )); then
   # Aggreate all logs and print to stdout
   run "cat <( eval \"${command_to_tail}\" ) $line_buffered"
 else
-  run "multitail `multitail_config_file` --mergeall ${pod_logs_commands[@]}"
+  run "multitail `multitail_config_file` ${multitail_options} --mergeall ${pod_logs_commands[@]}"
 fi
 
 exit
